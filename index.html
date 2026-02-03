@@ -1,0 +1,343 @@
+<!-- Chosen Palette: Warm Professional - Background: Stone-50, Text: Stone-800, Primary Accent: Slate-700, Secondary Accent: Emerald-600 (for savings/positive numbers) -->
+
+<!-- Application Structure Plan: 
+    1. Hero Section: Immediate value proposition focusing on the "Zero Real Cost" potential.
+    2. Problem/Solution: Logic explaining the synergy of Admin Scrivener and Labor Consultant.
+    3. Live Simulator: Interactive calculation using Chart.js.
+    4. Lead-Gen Form: A detailed inquiry form integrated with Formspree for email delivery to the user's specific endpoint.
+-->
+
+<!-- Visualization & Content Choices:
+    1. Cost Comparison -> Stacked Bar (Chart.js) -> Shows visual impact of subsidies.
+    2. Net Result -> Diverging Bar Chart -> Profit vs Loss visualization.
+    3. Input Form -> Structured HTML -> Integrated with Formspree for direct email notifications.
+-->
+
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特定技能採用コスト適正化シミュレーション</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #fcfaf8;
+            color: #292524;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #4b5563;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; 
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 8.4px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 1.3px;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 tracking-tighter uppercase text-slate-900">Legal & Labor Synergy</span>
+                </div>
+                <div class="hidden sm:flex items-center space-x-8">
+                    <a href="#problems" class="text-gray-600 hover:text-slate-800 text-sm font-medium">現状の課題</a>
+                    <a href="#solution" class="text-gray-600 hover:text-slate-800 text-sm font-medium">提案モデル</a>
+                    <a href="#simulation" class="text-gray-600 hover:text-slate-800 text-sm font-medium">コスト試算</a>
+                    <a href="#inquiry" class="bg-slate-800 text-white px-5 py-2 rounded-full text-sm hover:bg-slate-700 transition">試算表を依頼</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="bg-slate-900 text-white py-24">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 leading-tight text-white">
+                特定技能1名の採用コストを<br><span class="text-emerald-400">実質プラス</span>にする仕組み
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+                行政書士と社労士のダブルサポートだからできる、<br>
+                「キャリアアップ助成金」を最大限に活用した新時代の採用戦略。
+            </p>
+            <a href="#simulation" class="inline-block bg-white text-slate-900 font-bold py-4 px-10 rounded-full hover:bg-slate-100 transition shadow-xl">
+                削減額の目安を計算する
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Problems -->
+        <section id="problems" class="py-20 px-4 max-w-6xl mx-auto scroll-mt-20">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-gray-900">なぜ特定技能の採用は「高い」のか？</h2>
+                <p class="mt-4 text-gray-600">紹介料、ビザ申請、月額支援費... 積み重なるコストの正体。</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="p-8 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="text-4xl mb-4">🚫</div>
+                    <h3 class="font-bold text-xl mb-3">助成金の活用漏れ</h3>
+                    <p class="text-sm text-gray-500">採用前に計画を届け出るだけで100万円単位の還元があることを、多くの紹介会社は教えません。</p>
+                </div>
+                <div class="p-8 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="text-4xl mb-4">📂</div>
+                    <h3 class="font-bold text-xl mb-3">分断されたコスト</h3>
+                    <p class="text-sm text-gray-500">紹介会社と行政書士が別々だと、手続きが重複し、それぞれのマージンが経営を圧迫します。</p>
+                </div>
+                <div class="p-8 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="text-4xl mb-4">📝</div>
+                    <h3 class="font-bold text-xl mb-3">法改正への未対応</h3>
+                    <p class="text-sm text-gray-500">2026年改正で書類作成のルールが厳格化。無資格者による支援は企業の法的リスクを増大させます。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation -->
+        <section id="simulation" class="py-20 bg-slate-50 border-y border-gray-200 scroll-mt-20">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900">コストシミュレーション</h2>
+                    <p class="mt-4 text-gray-600">スライダーを動かして、現在のコストと比較してください。</p>
+                </div>
+
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 mb-12 max-w-4xl mx-auto">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <span class="text-xs text-gray-400 font-bold uppercase block mb-1">Target Hires</span>
+                            <span id="hiresCount" class="text-5xl font-bold text-slate-800">1</span> <span class="text-xl text-gray-500">名</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-emerald-600 font-bold uppercase block mb-1">Total Savings</span>
+                            <span id="savingsAmount" class="text-4xl font-bold text-emerald-600">850,000</span> <span class="text-emerald-600 font-medium">円 削減</span>
+                        </div>
+                    </div>
+                    <input type="range" id="hiresRange" min="1" max="15" value="1" class="w-full h-3 bg-gray-100 rounded-full appearance-none cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-6 text-center">初期コストの構造</h3>
+                        <div class="chart-container">
+                            <canvas id="breakdownChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-6 text-center">実質負担額の比較（還元後）</h3>
+                        <div class="chart-container">
+                            <canvas id="netImpactChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inquiry Form (Lead Gen) -->
+        <section id="inquiry" class="py-20 px-4 max-w-4xl mx-auto scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">無料試算表の作成依頼</h2>
+                <p class="mt-4 text-gray-600">貴社の現在の条件に基づき、より正確なコスト削減案を作成いたします。</p>
+            </div>
+
+            <!-- Integrated with the user provided Formspree endpoint -->
+            <form action="https://formspree.io/f/xlglyldl" method="POST" class="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Basic Info -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">会社名 *</label>
+                        <input type="text" name="会社名" placeholder="株式会社〇〇" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">担当者名 *</label>
+                        <input type="text" name="担当者名" placeholder="氏名" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">メールアドレス *</label>
+                        <input type="email" name="_replyto" placeholder="email@example.com" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">電話番号 *</label>
+                        <input type="tel" name="電話番号" placeholder="000-0000-0000" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500" required>
+                    </div>
+
+                    <!-- Strategic Info -->
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">対象業種 *</label>
+                        <select name="業種" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                            <option value="食品製造">食品製造</option>
+                            <option value="外食・飲食">外食・飲食</option>
+                            <option value="宿泊">宿泊</option>
+                            <option value="介護">介護</option>
+                            <option value="その他">その他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">現在の採用状況 *</label>
+                        <select name="現在の採用状況" class="w-full p-3 bg-slate-50 border border-gray-200 rounded-lg focus:outline-none focus:border-emerald-500">
+                            <option value="初めて検討">これから初めて検討する</option>
+                            <option value="既に雇用（外部委託）">既に雇用している（外部委託）</option>
+                            <option value="既に雇用（自社）">既に雇用している（自社）</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-8 bg-emerald-50 p-6 rounded-2xl">
+                    <h4 class="font-bold text-emerald-800 mb-4 flex items-center">
+                        <span class="mr-2">💡</span> より正確な試算のための任意項目
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-bold text-emerald-700 mb-2 uppercase">現在の月額支援委託費（1名あたり）</label>
+                            <input type="number" name="現在の支援費" placeholder="例：30000" class="w-full p-2 bg-white border border-emerald-200 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-emerald-700 mb-2 uppercase">現在の顧問社労士の有無</label>
+                            <select name="顧問社労士" class="w-full p-2 bg-white border border-emerald-200 rounded-md text-sm">
+                                <option value="あり（外国人は未対応）">あり（外国人は未対応）</option>
+                                <option value="あり（外国人も対応中）">あり（外国人も対応中）</option>
+                                <option value="なし">なし</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden field for email subject -->
+                <input type="hidden" name="_subject" value="特定技能コスト試算依頼がありました">
+
+                <div class="text-center">
+                    <p class="text-xs text-gray-400 mb-6">
+                        ※ご入力いただいた内容を元に、行政書士および社会保険労務士が削減ポテンシャルを確認いたします。<br>
+                        強引な営業は一切行いませんのでご安心ください。
+                    </p>
+                    <button type="submit" class="bg-emerald-600 text-white font-bold py-5 px-16 rounded-full hover:bg-emerald-500 transition shadow-lg transform hover:scale-105">
+                        貴社専用の無料試算表を作成する
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="bg-slate-950 text-slate-500 py-12 text-center text-sm border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="mb-2">Administrative Scrivener & Labor Consultant Partners</p>
+            <p>&copy; 2026 Legal & Labor Solution Lab. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const G_DATA = { recruit: 600000, visa: 150000, admin: 40000, subsidy: 0 };
+        const S_DATA = { recruit: 600000, visa: 100000, admin: 40000, subsidy: 1000000 };
+
+        let chartB = null;
+        let chartN = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            updateAll(1);
+            document.getElementById('hiresRange').addEventListener('input', (e) => {
+                const n = parseInt(e.target.value);
+                document.getElementById('hiresCount').textContent = n;
+                updateAll(n);
+            });
+        });
+
+        function initCharts() {
+            Chart.defaults.font.family = "'Noto Sans JP', sans-serif";
+            
+            const ctxB = document.getElementById('breakdownChart').getContext('2d');
+            chartB = new Chart(ctxB, {
+                type: 'bar',
+                data: {
+                    labels: ['一般モデル', '士業連携モデル'],
+                    datasets: [
+                        { label: '人材紹介料', data: [G_DATA.recruit, S_DATA.recruit], backgroundColor: '#cbd5e1' },
+                        { label: '申請費・事務費', data: [G_DATA.visa + G_DATA.admin, S_DATA.visa + S_DATA.admin], backgroundColor: '#475569' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } }
+                }
+            });
+
+            const ctxN = document.getElementById('netImpactChart').getContext('2d');
+            chartN = new Chart(ctxN, {
+                type: 'bar',
+                data: {
+                    labels: ['一般モデル', '士業連携モデル'],
+                    datasets: [{
+                        label: '実質負担',
+                        data: [790000, -260000],
+                        backgroundColor: (c) => c.raw > 0 ? '#f87171' : '#10b981'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { ticks: { callback: v => v.toLocaleString() + '円' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateAll(n) {
+            const gTotal = (G_DATA.recruit + G_DATA.visa + G_DATA.admin) * n;
+            const sCost = (S_DATA.recruit + S_DATA.visa + S_DATA.admin) * n;
+            const sSub = S_DATA.subsidy * n;
+            const sNet = sCost - sSub;
+            
+            document.getElementById('savingsAmount').textContent = (gTotal - sNet).toLocaleString();
+
+            if(chartB) {
+                chartB.data.datasets[0].data = [G_DATA.recruit * n, S_DATA.recruit * n];
+                chartB.data.datasets[1].data = [(G_DATA.visa + G_DATA.admin) * n, (S_DATA.visa + S_DATA.admin) * n];
+                chartB.update();
+            }
+            if(chartN) {
+                chartN.data.datasets[0].data = [gTotal, sNet];
+                chartN.update();
+            }
+        }
+    </script>
+</body>
+</html>
